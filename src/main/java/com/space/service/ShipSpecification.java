@@ -37,7 +37,7 @@ public class ShipSpecification implements Specification<Ship> {
         }
         if(criteria.getBefore() != null) {
             Date date = new Date(criteria.getBefore());
-            Date finalYear = new Date(date.getYear(), 11, 31,23,59,59);
+            Date finalYear = new Date(date.getYear(), 0, 2);
             predicates.add(cb.lessThanOrEqualTo(root.get("prodDate"), finalYear));
         }
         if(criteria.getIsUsed() != null) {
