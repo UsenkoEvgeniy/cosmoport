@@ -4,10 +4,8 @@ import com.space.model.Ship;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.*;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class ShipSpecification implements Specification<Ship> {
@@ -22,7 +20,7 @@ public class ShipSpecification implements Specification<Ship> {
 
         Path<String> name = root.get("name");
         Path<String> planet = root.get("planet");
-        final List<Predicate> predicates = new ArrayList<Predicate>();
+        final List<Predicate> predicates = new ArrayList<>();
         if(criteria.getName() != null){
             predicates.add(cb.like (name,"%" + criteria.getName() + "%"));
         }
@@ -33,14 +31,14 @@ public class ShipSpecification implements Specification<Ship> {
             predicates.add(cb.equal(root.get("shipType"), criteria.getShipType()));
         }
         if(criteria.getAfter() != null) {
-            LocalDate lDate = Instant.ofEpochMilli(criteria.getAfter()).atZone(ZoneId.systemDefault()).toLocalDate();
-            lDate = LocalDate.of(lDate.getYear(), 1,1);
-            predicates.add(cb.greaterThanOrEqualTo(root.get("prodDate"), java.sql.Date.valueOf(lDate)));
+            Date date = new Date(criteria.getAfter());
+            Date startYear = new Date(date.getYear(), 0, 1);
+            predicates.add(cb.greaterThanOrEqualTo(root.get("prodDate"), startYear));
         }
         if(criteria.getBefore() != null) {
-            LocalDate lDate = Instant.ofEpochMilli(criteria.getBefore()).atZone(ZoneId.systemDefault()).toLocalDate();
-            lDate = LocalDate.of(lDate.getYear(), 12,31);
-            predicates.add(cb.lessThanOrEqualTo(root.get("prodDate"), java.sql.Date.valueOf(lDate)));
+            Date date = new Date(criteria.getBefore());
+            Date finalYear = new Date(date.getYear(), 11, 31,23,59,59);
+            predicates.add(cb.lessThanOrEqualTo(root.get("prodDate"), finalYear));
         }
         if(criteria.getIsUsed() != null) {
             predicates.add(cb.equal(root.get("isUsed"), criteria.getIsUsed()));
