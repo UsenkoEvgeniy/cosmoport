@@ -31,14 +31,14 @@ public class ShipSpecification implements Specification<Ship> {
             predicates.add(cb.equal(root.get("shipType"), criteria.getShipType()));
         }
         if(criteria.getAfter() != null) {
-            Date date = new Date(criteria.getAfter());
-            Date startYear = new Date(date.getYear(), 0, 1);
-            predicates.add(cb.greaterThanOrEqualTo(root.get("prodDate"), startYear));
+//            Date date = new Date(criteria.getAfter());
+//            Date startYear = new Date(date.getYear()+1, 0, 1);
+            predicates.add(cb.greaterThanOrEqualTo(root.get("prodDate"), new Date(criteria.getAfter())));
         }
         if(criteria.getBefore() != null) {
-            Date date = new Date(criteria.getBefore());
-            Date finalYear = new Date(date.getYear(), 0, 2);
-            predicates.add(cb.lessThanOrEqualTo(root.get("prodDate"), finalYear));
+//            Date date = new Date(criteria.getBefore());
+//            Date finalYear = new Date(date.getYear()-1, 11, 31,23,59,59);
+            predicates.add(cb.lessThanOrEqualTo(root.get("prodDate"), new Date(criteria.getBefore())));
         }
         if(criteria.getIsUsed() != null) {
             predicates.add(cb.equal(root.get("isUsed"), criteria.getIsUsed()));
